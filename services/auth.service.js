@@ -6,18 +6,16 @@ const {
   deleteResetTokenDb,
   isValidTokenDb,
 } = require("../db/auth.db");
-const validateUser = require("../helpers/validateUser");
+const {validateUser, validatefield} = require("../helpers/validateUser");
 const { ErrorHandler } = require("../helpers/error");
 const { changeUserPasswordDb } = require("../db/user.db");
 const {
   getUserByEmailDb,
-  getUserByUsernameDb,
   createUserDb,
-  createUserGoogleDb,
 } = require("../db/user.db");
 const { createCartDb } = require("../db/cart.db");
 const mail = require("./mail.service");
-
+require('dotenv').config();
 const crypto = require("crypto");
 const moment = require("moment");
 const { logger } = require("../utils/logger");
@@ -26,53 +24,60 @@ let curDate = moment().format();
 class AuthService {
   async signUp(user) {
     try {
-      const { password, email, lastname, name,cellno } = user;
-      if (!email || !password || !lastname || !name || !cellno) {
+      const { password, email, lastname, name,cellno ,street,
+        surburb,
+        city,
+        province } = user;
+      if (!email || !password || !lastname || !name || !cellno || !street ||!surburb ||!city ||!province) {
         throw new ErrorHandler(401, "all fields required");
       }
 
       if (validateUser(email, password)) {
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const userByEmail = await getUserByEmailDb(email);
-        //const userByUsername = await getUserByUsernameDb(username);
-
-        if (userByEmail) {
-          throw new ErrorHandler(401, "email taken already");
-        }
-
+        const message=validatefield(user);
         
 
+        if(message) return { message };
+
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+        
+        const userByEmail = await getUserByEmailDb(email);
+        //const userByUsername = await getUserByUsernameDb(username);
+        if (userByEmail) {
+          const message="email taken already";
+          return {message};
+        }
+      
         const newUser = await createUserDb({
           ...user,
           password: hashedPassword,
         });
+       
+        const {myuser,address}=newUser;
 
-        const { id: cart_id } = await createCartDb(newUser.user_id);
+        const { id: cart_id } = await createCartDb(myuser.user_id);
+
         const token = await this.signToken({
-          id: newUser.user_id,
-          roles: newUser.roles,
+          id: myuser.user_id,
+          roles: myuser.roles,
           cart_id,
         });
+        
+       
         const refreshToken = await this.signRefreshToken({
-          id: newUser.user_id,
-          roles: newUser.roles,
+          id: myuser.user_id,
+          roles: myuser.roles,
           cart_id,
         });
-
+        
         return {
           token,
           refreshToken,
-          user: {
-            user_id: newUser.user_id,
-            lastname: newUser.lastname,
-            name: newUser.name,
-            email: newUser.email,
-            cellno: newUser.cellno
-          },
+          myuser,
+          address
         };
       } else {
+       
         throw new ErrorHandler(401, "Input validation error");
       }
     } catch (error) {
@@ -223,7 +228,12 @@ class AuthService {
 
   async signToken(data) {
     try {
-      return jwt.sign(data, process.env.SECRET, { expiresIn: "60s" });
+      
+      const token= jwt.sign(data,process.env.SECRET,{
+        expiresIn:"20m",
+      });
+      return token||null;//jwt.sign(data, process.env.SECRET, { expiresIn: "60s" });
+
     } catch (error) {
       logger.error(error);
       throw new ErrorHandler(500, "An error occurred");

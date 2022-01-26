@@ -7,6 +7,7 @@ const {
   getUserProfile,
 } = require("../controllers/users.controller");
 const router = require("express").Router();
+
 const verifyAdmin = require("../middleware/verifyAdmin");
 const verifyToken = require("../middleware/verifyToken");
 

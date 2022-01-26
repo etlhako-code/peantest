@@ -27,14 +27,7 @@ class UserService {
       throw new ErrorHandler(error.statusCode, error.message);
     }
   };
-  getUserByUsername = async (name) => {
-    try {
-      const user = await getUserByUsernameDb(name);
-      return user;
-    } catch (error) {
-      throw new ErrorHandler(error.statusCode, error.message);
-    }
-  };
+
   getUserById = async (id) => {
     try {
       const user = await getUserByIdDb(id);
@@ -46,13 +39,7 @@ class UserService {
       throw new ErrorHandler(error.statusCode, error.message);
     }
   };
-  createGoogleAccount = async (user) => {
-    try {
-      return await createUserGoogleDb(user);
-    } catch (error) {
-      throw new ErrorHandler(error.statusCode, error.message);
-    }
-  };
+
   changeUserPassword = async (password, email) => {
     try {
       return await changeUserPasswordDb(password, email);
@@ -65,6 +52,7 @@ class UserService {
     const errors = {};
     try {
       const getUser = await getUserByIdDb(id);
+      
       const findUserByEmail = await getUserByEmailDb(email);
       //const findUserByUsername = await getUserByUsernameDb(name);
       const emailChanged =

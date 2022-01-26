@@ -3,12 +3,16 @@ const mail = require("../services/mail.service");
 const { ErrorHandler } = require("../helpers/error");
 
 const createAccount = async (req, res) => {
-  const { token, refreshToken, user } = await authService.signUp(req.body);
+  const  signup= await authService.signUp(req.body);
 
+  if(signup.message) return res.status(400).send(signup.message); 
+ 
+  const { token, refreshToken, myuser , address } = signup; 
+  
   if (process.env.NODE_ENV !== "test") {
-    await mail.signupMail(user.email, user.fullname.split(" ")[0]);
+    await mail.signupMail(myuser.email, myuser.lastname);
   }
-
+ 
   res.header("auth-token", token);
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
@@ -17,7 +21,8 @@ const createAccount = async (req, res) => {
   });
   res.status(201).json({
     token,
-    user,
+    myuser,
+    address
   });
 };
 

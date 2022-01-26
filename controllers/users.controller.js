@@ -8,7 +8,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  const { username, password, email, fullname,cellno } = req.body;
+  const { name, password, email, lastname,cellno } = req.body;
   const hashedPassword = hashPassword(password);
 
   const user = await userService.createUser({
@@ -47,14 +47,16 @@ const getUserProfile = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { name, email, lastname, address, city, province} = req.body;
+  const { name, email, lastname,cellno, street,surburb, city, province} = req.body;
   if (+req.params.id === req.user.id || req.user.roles.includes("admin")) {
     try {
       const results = await userService.updateUser({
         name,
         email,
         lastname,
-        address,
+        street,
+        cellno,
+        surburb,
         city,
         province,
         id: req.params.id,
@@ -76,8 +78,9 @@ const deleteUser = async (req, res) => {
     } catch (error) {
       throw new ErrorHandler(error.statusCode, error.message);
     }
+  }else{
+    throw new ErrorHandler(401, "Unauthorized");
   }
-  throw new ErrorHandler(401, "Unauthorized");
 };
 
 module.exports = {

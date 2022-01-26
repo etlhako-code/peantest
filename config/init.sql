@@ -73,6 +73,17 @@ CREATE TABLE public.reviews
     PRIMARY KEY (user_id, product_id)
 );
 
+CREATE TABLE public.addresses
+(
+    address_id SERIAL NOT NULL,
+    street character varying(200),
+    surburb character varying(200),
+    city character varying(100),
+    province character varying(100),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (address_id)
+);
+
 CREATE TABLE public.users
 (
     user_id SERIAL NOT NULL,
@@ -82,18 +93,15 @@ CREATE TABLE public.users
     name character varying(50) UNIQUE NOT NULL,
     cellno character varying(100) UNIQUE,
     roles character varying(10)[] DEFAULT '{customer}'::character varying[] NOT NULL,
-    
-    address character varying(200),
-    city character varying(100),
-    province character varying(100),
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id)
 );
 
+
 ALTER TABLE public.cart
     ADD FOREIGN KEY (user_id)
     REFERENCES public.users (user_id)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -107,7 +115,7 @@ ALTER TABLE public.cart_item
 ALTER TABLE public.cart_item
     ADD FOREIGN KEY (product_id)
     REFERENCES public.products (product_id)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -121,7 +129,7 @@ ALTER TABLE public.order_item
 ALTER TABLE public.order_item
     ADD FOREIGN KEY (product_id)
     REFERENCES public.products (product_id)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -135,14 +143,20 @@ ALTER TABLE public.orders
 ALTER TABLE public.reviews
     ADD FOREIGN KEY (product_id)
     REFERENCES public.products (product_id)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
     NOT VALID;
 
 
 ALTER TABLE public.reviews
     ADD FOREIGN KEY (user_id)
     REFERENCES public.users (user_id)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
+    NOT VALID;
+
+ALTER TABLE public.addresses
+    ADD FOREIGN KEY (user_id)
+    REFERENCES public.users (user_id)
+    ON DELETE CASCADE
     NOT VALID;
 
 CREATE UNIQUE INDEX users_unique_lower_email_idx
