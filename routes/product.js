@@ -16,19 +16,19 @@ const verifyToken = require("../middleware/verifyToken");
 router
   .route("/")
   .get(getAllProducts)
-  .post(verifyToken, verifyAdmin, createProduct);
+  .post(createProduct);//add after testing verifyToken, verifyAdmin,
 
 router
   .route("/:id")
   .get(getProduct)
   .get(getProductByName)
-  .put(verifyToken, verifyAdmin, updateProduct)
-  .delete(verifyToken, verifyAdmin, deleteProduct);
+  .put( updateProduct) // add after testing verifyToken, verifyAdmin,
+  .delete( deleteProduct); // add after testing verifyToken, verifyAdmin,
 
 router.route("/:id/reviews")
   .get( getProductReviews)
-  .post(verifyToken, createProductReview)
-  .put(verifyToken, updateProductReview);
+  .post(createProductReview) // add after testing verifyToken, 
+  .put(updateProductReview); //verifyToken,
 
 
 module.exports = router;

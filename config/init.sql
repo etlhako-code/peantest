@@ -49,7 +49,9 @@ CREATE TABLE public.products
     price real NOT NULL,
     description text NOT NULL,
     image character varying,
+    category character varying,
     PRIMARY KEY (product_id)
+
 );
 
 CREATE TABLE public."resetTokens"
@@ -76,6 +78,7 @@ CREATE TABLE public.reviews
 CREATE TABLE public.addresses
 (
     address_id SERIAL NOT NULL,
+    product_id integer NOT NULL,
     street character varying(200),
     surburb character varying(200),
     city character varying(100),
