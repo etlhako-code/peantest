@@ -1,3 +1,4 @@
+const e = require("express");
 const { logger } = require("../utils/logger");
 class ErrorHandler extends Error {
   constructor(statusCode, message) {

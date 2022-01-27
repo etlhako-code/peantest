@@ -2,7 +2,7 @@ const orderService = require("../services/order.service");
 const cartService = require("../services/cart.service");
 
 const createOrder = async (req, res) => {
-  const { amount, itemTotal, paymentMethod, ref } = req.body;
+  const { amount, itemTotal, paymentMethod} = req.body;
   const userId = req.user.id;
   const cartId = req.user.cart_id;
 

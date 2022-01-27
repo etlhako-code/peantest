@@ -20,7 +20,7 @@ app.use(cookieParser()); // allow use of cookies
 
 app.use("/api/v1/", routes); // routes all request to come as json
 
-app.get("/", (req, res) =>{  //test route and db
+app.get("/test", (req, res) =>{  //test route and db
   pool.query('select * from users',(err,result)=>{
        if(err) res.status(400).send({err,msg:"somthing went wrong"});
 

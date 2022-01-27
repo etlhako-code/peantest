@@ -13,11 +13,11 @@ const {
   getUserByEmailDb,
   createUserDb,
 } = require("../db/user.db");
-const { createCartDb } = require("../db/cart.db");
-const mail = require("./mail.service");
+const { createCartDb } = require("../db/cart.db"); // temporary fix
+const mail = require("./mail.service"); // email 
 require('dotenv').config();
 const crypto = require("crypto");
-const moment = require("moment");
+const moment = require("moment");// date formats
 const { logger } = require("../utils/logger");
 let curDate = moment().format();
 
@@ -39,7 +39,7 @@ class AuthService {
         if(message) return { message };
 
         const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);  
         
         const userByEmail = await getUserByEmailDb(email);
         //const userByUsername = await getUserByUsernameDb(username);

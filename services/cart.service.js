@@ -17,6 +17,7 @@ class CartService {
       throw new ErrorHandler(error.statusCode, error.message);
     }
   };
+
   getCart = async (userId) => {
     try {
       return await getCartDb(userId);
@@ -24,7 +25,6 @@ class CartService {
       throw new ErrorHandler(error.statusCode, error.message);
     }
   };
-
   addItem = async (data) => {
     try {
       return await addItemDb(data);
