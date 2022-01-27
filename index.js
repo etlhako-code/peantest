@@ -1,7 +1,7 @@
-require("dotenv").config({ path: __dirname + "/.env" });
-const http = require("http");
-const app = require("./app");
-const { logger } = require("./utils/logger");
+require("dotenv").config({ path: __dirname + "/.env" });// brings environment valiables 
+const http = require("http"); //used to create server
+const app = require("./app"); //import app
+const { logger } = require("./utils/logger"); // gives us more info on our routes results and errors
 
 const server = http.createServer(app);
 

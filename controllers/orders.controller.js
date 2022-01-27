@@ -29,7 +29,7 @@ const getAllOrders = async (req, res) => {
 };
 
 const getOrder = async (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
   const userId = req.user.id;
 
   const order = await orderService.getOrderById({ id, userId });
