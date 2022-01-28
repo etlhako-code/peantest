@@ -78,7 +78,7 @@ CREATE TABLE public.reviews
 CREATE TABLE public.addresses
 (
     address_id SERIAL NOT NULL,
-    product_id integer NOT NULL,
+    user_id integer NOT NULL,
     street character varying(200),
     surburb character varying(200),
     city character varying(100),
