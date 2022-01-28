@@ -8,6 +8,9 @@ const getCart = async (req, res) => {
   res.json({ items: cart });
 };
 
+const createCart = async (req,res)=>{
+  
+}
 // add item to cart
 const addItem = async (req, res) => {
   const cart_id = req.user.cart_id;

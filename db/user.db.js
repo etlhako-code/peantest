@@ -31,7 +31,7 @@ const createUserDb = async ({ name, password, email, lastname , cellno,province,
 
 const getUserByIdDb = async (id) => {
   const { rows: user } = await pool.query(
-    "select users.*, cart.id as cart_id from users left join cart on cart.user_id = users.user_id where users.user_id = $1",
+    "select users.* from users where users.user_id = $1",
     [id]
   );//0581
   return user[0];
@@ -40,7 +40,7 @@ const getUserByIdDb = async (id) => {
 const getUserByEmailDb = async (email) => {
  
   const exists =await pool.query(
-    "select users.*, cart.id as cart_id from users left join cart on cart.user_id = users.user_id where lower(email) = lower($1) ",
+    "select users.* from users where lower(email) = lower($1) ",
     [email]
   );
 

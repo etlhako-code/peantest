@@ -24,7 +24,7 @@ const signupMail = async (to, name) => {
     const message = {
       from: "etlhako@gmail.com",
       to,
-      subject: "Welcome to pastry Store",
+      subject: "Welcome to Sweet cakes",
       html: html(name),
     };
 

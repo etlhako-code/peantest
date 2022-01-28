@@ -32,8 +32,6 @@ class UserService {
     try {
       const user = await getUserByIdDb(id);
       user.password = undefined;
-      user.google_id = undefined;
-      user.cart_id = undefined;
       return user;
     } catch (error) {
       throw new ErrorHandler(error.statusCode, error.message);
@@ -48,25 +46,20 @@ class UserService {
     }
   };
   updateUser = async (user) => {
-    const { email, name, id } = user;
+    const { email, id } = user;
     const errors = {};
     try {
       const getUser = await getUserByIdDb(id);
       
       const findUserByEmail = await getUserByEmailDb(email);
-      //const findUserByUsername = await getUserByUsernameDb(name);
+      
       const emailChanged =
         email && getUser.email.toLowerCase() !== email.toLowerCase();
-     /*  const usernameChanged =
-        username && getUser.username.toLowerCase() !== name.toLowerCase();
- */
+ 
       if (emailChanged && typeof findUserByEmail === "object") {
         errors["email"] = "Email is already taken";
       }
-      /* if (usernameChanged && typeof findUserByUsername === "object") {
-        errors["username"] = "Username is already taken";
-      } */
-
+    
       if (Object.keys(errors).length > 0) {
         throw new ErrorHandler(403, errors);
       }

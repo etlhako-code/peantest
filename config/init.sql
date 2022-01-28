@@ -1,4 +1,4 @@
-CREATE TABLE public.cart
+/* CREATE TABLE public.cart
 (
     id SERIAL NOT NULL,
     user_id integer UNIQUE NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE public.cart_item
     quantity integer NOT NULL CHECK (quantity > 0),
     PRIMARY KEY (id),
     UNIQUE (cart_id, product_id)
-);
+); */
 
 CREATE TABLE public.order_item
 (
@@ -21,6 +21,7 @@ CREATE TABLE public.order_item
     order_id integer NOT NULL,
     product_id integer NOT NULL,
     quantity integer NOT NULL,
+    subtotal real NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -33,11 +34,9 @@ CREATE TABLE public.orders
 (
     order_id SERIAL NOT NULL,
     user_id integer NOT NULL,
-    status character varying(20) NOT NULL,
+    status character varying(20) NOT NULL,  --default to complete
     date timestamp without time zone DEFAULT CURRENT_DATE NOT NULL,
-    amount real,
-    total integer,
-
+    totalAmount integer,
     payment_method payment,
     PRIMARY KEY (order_id)
 );
@@ -78,7 +77,7 @@ CREATE TABLE public.reviews
 CREATE TABLE public.addresses
 (
     address_id SERIAL NOT NULL,
-    product_id integer NOT NULL,
+    user_id integer NOT NULL,
     street character varying(200),
     surburb character varying(200),
     city character varying(100),
@@ -101,7 +100,7 @@ CREATE TABLE public.users
 );
 
 
-ALTER TABLE public.cart
+/* ALTER TABLE public.cart
     ADD FOREIGN KEY (user_id)
     REFERENCES public.users (user_id)
     ON DELETE CASCADE
@@ -119,7 +118,7 @@ ALTER TABLE public.cart_item
     ADD FOREIGN KEY (product_id)
     REFERENCES public.products (product_id)
     ON DELETE CASCADE
-    NOT VALID;
+    NOT VALID; */
 
 
 ALTER TABLE public.order_item
