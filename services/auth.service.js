@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
@@ -13,9 +14,9 @@ const {
   getUserByEmailDb,
   createUserDb,
 } = require("../db/user.db");
-const { createCartDb } = require("../db/cart.db"); // temporary fix
+//const { createCartDb } = require("../db/cart.db"); // temporary fix
 const mail = require("./mail.service"); // email 
-require('dotenv').config();
+
 const crypto = require("crypto");
 const moment = require("moment");// date formats
 const { logger } = require("../utils/logger");
@@ -55,19 +56,17 @@ class AuthService {
        
         const {myuser,address}=newUser;
 
-        const { id: cart_id } = await createCartDb(myuser.user_id);
+        //const { id: cart_id } = await createCartDb(myuser.user_id);
 
         const token = await this.signToken({
           id: myuser.user_id,
-          roles: myuser.roles,
-          cart_id,
+          roles: myuser.roles
         });
         
        
         const refreshToken = await this.signRefreshToken({
           id: myuser.user_id,
           roles: myuser.roles,
-          cart_id,
         });
         
         return {
@@ -105,7 +104,6 @@ class AuthService {
         password: dbPassword,
         user_id,
         roles,
-        cart_id,
         lastname,
         name,
       } = user;
@@ -115,11 +113,10 @@ class AuthService {
         throw new ErrorHandler(403, "Email or password incorrect.");
       }
 
-      const token = await this.signToken({ id: user_id, roles, cart_id });
+      const token = await this.signToken({ id: user_id, roles});
       const refreshToken = await this.signRefreshToken({
         id: user_id,
         roles,
-        cart_id,
       });
       return {
         token,
@@ -230,7 +227,7 @@ class AuthService {
     try {
       
       const token= jwt.sign(data,process.env.SECRET,{
-        expiresIn:"20m",
+        expiresIn:"1h",
       });
       return token||null;//jwt.sign(data, process.env.SECRET, { expiresIn: "60s" });
 
@@ -254,8 +251,7 @@ class AuthService {
       const payload = jwt.verify(token, process.env.REFRESH_SECRET);
       return {
         id: payload.id,
-        roles: payload.roles,
-        cart_id: payload.cart_id,
+        roles: payload.roles
       };
     } catch (error) {
       logger.error(error);

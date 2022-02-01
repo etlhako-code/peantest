@@ -1,28 +1,33 @@
 const pool = require("../config/index");
 
 const createOrderDb = async ({
-  cartId,
-  amount,
-  itemTotal,
+  cart,
+  total_amount,
   userId,
-  paymentMethod,
+  payment_method,
 }) => {
   // create an order
   const { rows: order } = await pool.query(
-    "INSERT INTO orders(user_id, status, amount, total, payment_method) VALUES($1, 'complete', $2, $3, $4) returning *",
-    [userId, amount, itemTotal, paymentMethod]
+  `INSERT INTO orders(user_id, status, total_amount, payment_method)
+    VALUES($1, 'complete', $2, $3) returning *`,
+    [userId, total_amount, payment_method]
   );
-
-  // copy cart items from the current cart_item table into order_item table
-  await pool.query(
-    `
-      INSERT INTO order_item(order_id,product_id, quantity) 
-      SELECT $1, product_id, quantity from cart_item where cart_id = $2
-      returning *
-      `,
-    [order[0].order_id, cartId]
-  );
-  return order[0];
+  
+  var mycart =cart;
+  var items=[];
+   //create order_items
+   mycart.forEach(async(item)=>{
+    const {product_id,quantity,subtotal}= item;
+     const result= await pool.query(
+      `INSERT INTO order_item(order_id, product_id, quantity, subtotal)
+       VALUES($1, $2, $3, $4)
+        returning *
+        `,
+        [order[0].order_id, product_id, quantity, subtotal]);
+        
+   });
+      const myorder={order:order[0],items:cart};
+  return myorder;
 };
 
 const getAllOrdersDb = async ({ userId, limit, offset }) => {
@@ -31,7 +36,7 @@ const getAllOrdersDb = async ({ userId, limit, offset }) => {
     [userId]
   );
   const orders = await pool.query(
-    `SELECT order_id, user_id, status, date::date, amount, total 
+    `SELECT order_id, user_id, status, date::date, total_amount 
       from orders WHERE orders.user_id = $1 order by order_id desc limit $2 offset $3`,
     [userId, limit, offset]
   );

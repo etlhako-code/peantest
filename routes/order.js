@@ -12,4 +12,10 @@ router.route("/").get(verifyToken, getAllOrders);
 
 router.route("/:id").get(verifyToken, getOrder);
 
+
+/*testing routes
+router.route("/").get( getAllOrders);
+router.route("/create").post(createOrder);
+router.route("/:id").get( getOrder);*/
+
 module.exports = router;
