@@ -14,7 +14,7 @@ const {
   getUserByEmailDb,
   createUserDb,
 } = require("../db/user.db");
-//const { createCartDb } = require("../db/cart.db"); // temporary fix
+
 const mail = require("./mail.service"); // email 
 
 const crypto = require("crypto");
@@ -43,7 +43,7 @@ class AuthService {
         const hashedPassword = await bcrypt.hash(password, salt);  
         
         const userByEmail = await getUserByEmailDb(email);
-        //const userByUsername = await getUserByUsernameDb(username);
+        
         if (userByEmail) {
           const message="email taken already";
           return {message};
@@ -56,7 +56,7 @@ class AuthService {
        
         const {myuser,address}=newUser;
 
-        //const { id: cart_id } = await createCartDb(myuser.user_id);
+        
 
         const token = await this.signToken({
           id: myuser.user_id,

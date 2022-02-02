@@ -92,7 +92,7 @@ CREATE TABLE public.users
     password character varying(200),
     email character varying(100) UNIQUE NOT NULL,
     lastname character varying(100) NOT NULL,
-    name character varying(50) UNIQUE NOT NULL,
+    name character varying(50) NOT NULL,
     cellno character varying(100) UNIQUE,
     roles character varying(10)[] DEFAULT '{customer}'::character varying[] NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
@@ -164,6 +164,4 @@ ALTER TABLE public.addresses
 CREATE UNIQUE INDEX users_unique_lower_email_idx
     ON public.users (lower(email));
 
-CREATE UNIQUE INDEX users_unique_lower_username_idx
-    ON public.users (lower(name));
 
